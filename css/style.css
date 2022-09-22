@@ -3,7 +3,6 @@ body {
     flex-flow: column;
 }
 
-
 header {
     background-color: #68afe7;
     color: var(--color-darkest);
@@ -24,6 +23,10 @@ main {
     flex-grow: 1;
     margin-top: 0.5rem;
     padding-bottom: 0.5rem;
+}
+
+main div{
+    margin: 10px 0;
 }
 
 .source-code {
