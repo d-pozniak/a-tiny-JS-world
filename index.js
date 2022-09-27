@@ -5,61 +5,74 @@ import { print } from "./js/lib.js";
    Code repository: https://github.com/d-pozniak/a-tiny-JS-world
    Web app: https://d-pozniak.github.io/a-tiny-JS-world/
    */
-
-// ======== OBJECTS DEFINITIONS ========
-const dog = {
-    species: "dog",
-    hands: 0,
-    legs: 4,
-    name: "Bill",
-    gender: "male",
-    says: "Woof!",
-};
-const woman = {
-    species: "human",
-    hands: "2",
-    legs: "2",
-    name: "Pam",
-    gender: "female",
-    says: "Kottans` community is the best!",
-};
-const cat = {
-    species: "cat",
-    hands: 0,
-    legs: 4,
-    name: "Mattew",
-    gender: "male",
-    says: "Meow!",
-};
-const man = {
-    species: "human",
-    hands: "2",
-    legs: "2",
-    name: "Paul",
-    gender: "male",
-    says: "Why don`t we go grab something to eat?",
-};
-const catWoman = Object.create(cat, {
-    species: { value: "hero" },
-    hands: { value: "2" },
-    legs: { value: "2" },
-    name: { value: "Sally" },
-    gender: { value: "female" },
-});
-// ======== OUTPUT ========
-/* Use print(message) for output.
-   Default tag for message is <pre>. Use print(message,'div') to change containing element tag.
-
-   Message can contain HTML markup. You may also tweak index.html and/or styles.css.
-   However, please, REFRAIN from improving visuals at least until your code is reviewed
-   so code reviewers might focus on a single file that is index.js.
-   */
-const keyList = ["species", "name", "gender", "legs", "hands", "says"];
-const habList = [man, woman, cat, dog, catWoman];
-function createString(obj, keys) {
-    return keys.map((key) => obj[key]).join("; ");
+class Animal {
+    constructor({
+                    species: species,
+                    name: name,
+                    gender: gender,
+                    legs: legs = 4,
+                    says: says,
+                }) {
+        this.species = species;
+        this.name = name;
+        this.gender = gender;
+        this.legs = legs;
+        this.says = says;
+    }
+    getKeyList() {
+        return ["species", "name", "gender", "legs", "says"];
+    }
+    getStringOfValues() {
+        return this.getKeyList()
+            .map((key) => this[key])
+            .join("; ");
+    }
 }
-function printWorldHabitants(objects, features) {
-    objects.forEach((obj) => print(createString(obj, features), "div"));
+class Cat extends Animal {
+    species = "Cat";
+    says = "Meow!";
+    constructor(name, gender, legs) {
+        super({ name, gender, legs });
+    }
 }
-printWorldHabitants(habList, keyList);
+class Dog extends Animal {
+    species = "Dog";
+    says = "Woof!";
+    constructor(name, gender, legs) {
+        super({ name, gender, legs });
+    }
+}
+class Human extends Animal {
+    species = "Human";
+    constructor(name, gender, says, legs = 2, hands = 2) {
+        super({ name, gender, says, legs });
+        this.hands = hands;
+    }
+    getKeyList() {
+        const keyList = super.getKeyList();
+        keyList.splice(super.getKeyList().indexOf("legs"), 0, "hands");
+        return keyList;
+    }
+}
+
+const HUMANS = [
+        new Human("John", "male", "Hey guys!"),
+        new Human("Peter", "male", "How are you?"),
+        new Human("Steve", "male", "I love sunny weather."),
+        new Human("Mary", "female", "Let it snow."),
+        new Human("Jane", "female", "How is it going?"),
+        new Human("Jade", "female", "Can I have some cookies?"),
+    ],
+    DOGS = [
+        new Dog("Bobik", "male"),
+        new Dog("Spikey", "male"),
+        new Dog("Jo", "female"),
+    ],
+    CATS = [
+        new Cat("Murchik", "male"),
+        new Cat("Kitty", "female"),
+        new Cat("Benjamin", "male"),
+    ],
+    HABITANTS = HUMANS.concat(DOGS, CATS);
+
+HABITANTS.forEach((habitant) => print(habitant.getStringOfValues()));
